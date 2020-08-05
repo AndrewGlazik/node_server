@@ -1,0 +1,10 @@
+{{#if userName}}
+    <h3>Hi {{userName}}</h3>
+    <a href="/user/logout"><button>SignOut</button></a>
+    <a href="/user"><button>Users data</button></a>
+{{else}}
+    <h3>Hi man</h3>
+    <a href="/user/login"><button>SignIn</button></a>
+    <a href="/registration"><button>Registration</button></a>
+    <a href="/user/logout"><button>SignOut</button></a>
+{{/if}}

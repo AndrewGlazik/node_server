@@ -1,0 +1,20 @@
+<form name="registration_form" action="http://127.0.0.1:7000/user" method="post">
+    <label for="post-login">Login: </label>
+    <input id="post-login" type="text" name="login" value="{{login}}">
+    <br>
+    <br>
+    <label for="post-name">Name: </label>
+    <input id="post-name" type="text" name="name" value="{{name}}">
+    <br>
+    <br>
+    <label for="post-email">Email: </label>
+    <input id="post-email" type="text" name="email" value="{{email}}">
+    <br>
+    <br>
+    <label for="post-pass">Password: </label>
+    <input id="post-pass" type="password" name="password" value="{{password}}">
+    <br>
+    <br>
+    <button type="submit">Change info</button>
+    <a href="/"><button type="button">On main page</button></a>
+</form>
