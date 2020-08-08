@@ -2,11 +2,11 @@ const express = require('express'),
     router = express.Router(),
     LocalStrategy = require('passport-local').Strategy
 const passport = require('passport');
-const {User} = require("./models");
+const {Session, User} = require("./models");
+const {Op} = require('sequelize')
 
 passport.serializeUser(function (user, done) {
-    console.log('enter')
-    return done(null, user.id);
+    return done(null, user.id)
 });
 
 passport.deserializeUser(function (id, done) {
@@ -36,11 +36,37 @@ passport.use('local', new LocalStrategy({
 
 router.route('/')
     .get((req, res) => {
-        res.render('users/userData', {...req.user.get()})
+        res.render('users/userData', {...req['user'].get()})
     })
+    .post((request, response) => {
+            User.update({...request.body}, {where: {id: request['user'].id}})
+                .then(res => {
+                    if (res[0] === 0) {
+                        console.log('no user in base')
+                    }
+                    Session.destroy({
+                        attributes: ['sid', 'sess', 'expire'],
+                        where: {
+                            sess: {
+                                '"passport"': {
+                                    '"user"': request['user'].id
+                                }
+                            },
+                            sid: {
+                                [Op.not]: request['sessionID']
+                            }
+                        }
+                    }).then(res => {
+                        console.log(res)
+                    })
+                    response.redirect('/user')
+                })
+        }
+    )
 
 router.get('/logout', (req, res) => {
     req.logout()
+    req.session.destroy()
     res.redirect('/')
 })
 
@@ -52,8 +78,8 @@ router.route('/login')
             successRedirect: '/',
             failureRedirect: '/user/login',
             // failureFlash: true
-        }
-    ))
+        })
+    )
 
 module.exports = router
 

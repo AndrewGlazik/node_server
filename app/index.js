@@ -4,12 +4,11 @@ const express = require('express'),
     path = require('path'),
     bodyParser = require('body-parser'),
     users = require('./users'),
-    redis = require('redis'),
     session = require('express-session'),
-    redisStorage = require('connect-redis')(session),
-    client = redis.createClient(),
-    crypto = require('crypto')
+    pgSession = require('connect-pg-simple')(session),
+    flash = require('connect-flash')
 const passport = require('passport');
+const {DATABASE_URL} = require("../config");
 const {User} = require("./users/models");
 
 // const hour = 3600000
@@ -34,21 +33,21 @@ app.use(bodyParser.json())
 
 app.use(bodyParser.urlencoded({extended: true}))
 
-const generateSessionId = () => (crypto.randomBytes(32).toString('base64'))
+app.use(flash())
+
 
 app.use(
     session({
-        secret: generateSessionId(),
-        store: new redisStorage({
-            host: '127.0.0.1',
-            port: 6379,
-            client: client,
+        store: new pgSession({
+            conString: DATABASE_URL
         }),
-        resave: false,
+        secret: process.env.FOO_COOKIE_SECRET || 'oP85saf_DwdI8w9',
+        resave: true,
         // cookie: cookieConfig,
         saveUninitialized: true
     })
 )
+
 
 app.use(passport.initialize())
 

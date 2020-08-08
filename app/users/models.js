@@ -1,7 +1,25 @@
-const {DataTypes} = require('sequelize');
-const {Database} = require('../../config');
+const {Sequelize, DataTypes} = require('sequelize');
+const {DATABASE_URL} = require('../../config');
 
-const User = Database.define('User', {
+const Session = new Sequelize(DATABASE_URL).define('Session', {
+    sid: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        primaryKey: true
+    },
+    sess: {
+        type: DataTypes.JSON,
+        allowNull: false
+    },
+    expire: {
+        type: DataTypes.DATE,
+        allowNull: false
+    }
+}, {
+    tableName: 'session'
+})
+
+const User = new Sequelize(DATABASE_URL).define('User', {
     name: {
         type: DataTypes.STRING
         // allowNull defaults to true
@@ -25,11 +43,7 @@ const User = Database.define('User', {
     // Other model options go here
 });
 
-// (async () => {
-//     await Database.sync({ force: true });
-//     // Code here
-// })()
-
 module.exports = {
+    Session: Session,
     User: User
 }
