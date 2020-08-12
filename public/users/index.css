@@ -1,0 +1,15 @@
+.custom-notification {
+    width: 400px;
+    display: block;
+    top: 10px;
+    left: 300px;
+    -webkit-animation: cssAnimation 0s ease-in 3s forwards;
+}
+
+@-webkit-keyframes cssAnimation {
+    to {
+        width:0;
+        height:0;
+        visibility:hidden;
+    }
+}

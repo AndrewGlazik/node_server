@@ -1,7 +1,9 @@
 const {Sequelize, DataTypes} = require('sequelize');
 const {DATABASE_URL} = require('../../config');
 
-const Session = new Sequelize(DATABASE_URL).define('Session', {
+const sequelize = new Sequelize(DATABASE_URL, {sync: {alter: true}})
+
+const Session = sequelize.define('Session', {
     sid: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -16,17 +18,19 @@ const Session = new Sequelize(DATABASE_URL).define('Session', {
         allowNull: false
     }
 }, {
-    tableName: 'session'
+    tableName: 'session',
+    timestamps: false
 })
 
-const User = new Sequelize(DATABASE_URL).define('User', {
+const User = sequelize.define('User', {
     name: {
         type: DataTypes.STRING
         // allowNull defaults to true
     },
     login: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true
     },
     email: {
         type: DataTypes.STRING
@@ -44,6 +48,7 @@ const User = new Sequelize(DATABASE_URL).define('User', {
 });
 
 module.exports = {
+    sequelize: sequelize,
     Session: Session,
     User: User
 }

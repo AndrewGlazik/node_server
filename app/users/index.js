@@ -72,12 +72,14 @@ router.get('/logout', (req, res) => {
 
 router.route('/login')
     .get((req, res) => {
-        res.render('users/login')
+        res.render('users/login', {
+            notification: req.flash('error')
+        })
     })
     .post(passport.authenticate('local', {
             successRedirect: '/',
             failureRedirect: '/user/login',
-            // failureFlash: true
+            failureFlash: 'Invalid login/password',
         })
     )
 

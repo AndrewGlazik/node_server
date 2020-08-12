@@ -27,7 +27,11 @@ app.engine('hbs', handlebars({
 
 app.set('views', path.join(__dirname, 'views'))
 
+console.log(path.join(__dirname, '../views'))
+
 app.set('view engine', 'hbs')
+
+app.use(express.static(path.join(__dirname, '../public')))
 
 app.use(bodyParser.json())
 
@@ -65,11 +69,20 @@ app.use('/user', users)
 
 app.route('/registration')
     .get((req, res) => {
-        res.render('users/registrationForm')
+        res.render('users/registrationForm', {
+            notification: req.flash('error_during_create_user')
+        })
     })
-    .post((req, res) => {
-        User.create(req.body)
-        res.redirect('/')
+    .post((request, response) => {
+        User.create(request.body)
+            .then(res => {
+                console.log(res.get())
+                response.redirect('/')
+            })
+            .catch(err => {
+                request.flash('error_during_create_user', err.errors[0].message)
+                response.redirect('/registration')
+            })
     })
 
 module.exports = {

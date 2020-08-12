@@ -1,7 +1,6 @@
-const {Sequelize} = require("sequelize"),
-    {DATABASE_URL} = require("./index");
+const {sequelize} = require('../app/users/models');
 
 (async () => {
-    await new Sequelize(DATABASE_URL).sync({alter: true})
+    await sequelize.sync()
     // Code here
 })()
