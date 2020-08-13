@@ -36,7 +36,7 @@ passport.use('local', new LocalStrategy({
 
 router.route('/')
     .get((req, res) => {
-        res.render('users/userData', {...req['user'].get()})
+        res.render('users/userData', {...req['user'].get(), notification: req['flash']('error_during_update_user')})
     })
     .post((request, response) => {
             User.update({...request.body}, {where: {id: request['user'].id}})
@@ -59,6 +59,11 @@ router.route('/')
                     }).then(res => {
                         console.log(res)
                     })
+                })
+                .catch(err => {
+                    request['flash']('error_during_update_user', err.errors[0].message)
+                })
+                .finally(() => {
                     response.redirect('/user')
                 })
         }
@@ -73,7 +78,7 @@ router.get('/logout', (req, res) => {
 router.route('/login')
     .get((req, res) => {
         res.render('users/login', {
-            notification: req.flash('error')
+            notification: req['flash']('error')
         })
     })
     .post(passport.authenticate('local', {
