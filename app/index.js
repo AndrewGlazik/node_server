@@ -51,7 +51,8 @@ app.use(passport.session({}))
 
 app.get('/', (req, res) => {
     res.render('startPage', {
-        userName: req.user ? req.user.name : null
+        userName: req.user ? req.user.name : null,
+        notification: req['flash']('success_create_user')
     })
 })
 
@@ -66,11 +67,11 @@ app.route('/registration')
     .post((request, response) => {
         User.create(request.body)
             .then(res => {
-                console.log(res.get())
+                request['flash']('success_create_user', `success create new user: ${res.name}`)
                 response.redirect('/')
             })
             .catch(err => {
-                request['flash']('error_during_create_user', err.errors[0].message)
+                request['flash']('error_during_create_user', err.parent ? err.parent.detail : err.errors[0].message)
                 response.redirect('/registration')
             })
     })
