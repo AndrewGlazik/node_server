@@ -5,7 +5,8 @@ const express = require('express'),
     bodyParser = require('body-parser'),
     users = require('./users'),
     session = require('express-session'),
-    pgSession = require('connect-pg-simple')(session)
+    pgSession = require('connect-pg-simple')(session),
+    logger = require('morgan')
 const passport = require('passport');
 const {DATABASE_URL} = require("../config");
 const {User} = require("./users/models");
@@ -31,6 +32,7 @@ app.use(express.static(path.join(__dirname, '../public')))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(require('connect-flash')())
+app.use(logger('dev'))
 
 app.use(
     session({
