@@ -1,7 +1,7 @@
 const {Sequelize, DataTypes} = require('sequelize');
 const {DATABASE_URL} = require('../../config');
 
-const sequelize = new Sequelize(DATABASE_URL, {sync: {alter: true}})
+const sequelize = new Sequelize(DATABASE_URL, {sync: {alter: true}, logging: false})
 
 const Session = sequelize.define('Session', {
     sid: {
@@ -49,7 +49,8 @@ const User = sequelize.define('User', {
         }
     }
 }, {
-    tableName: 'users'
+    tableName: 'users',
+    timestamps: false
     // Other model options go here
 });
 

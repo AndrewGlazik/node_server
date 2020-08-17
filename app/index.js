@@ -39,7 +39,7 @@ app.use(
         store: new pgSession({
             conString: DATABASE_URL
         }),
-        secret: process.env.FOO_COOKIE_SECRET || 'oP85saf_DwdI8w9',
+        secret: process.env.COOKIE_SECRET || 'oP85saf_DwdI8w9',
         resave: false,
         cookie: cookieConfig,
         saveUninitialized: true
